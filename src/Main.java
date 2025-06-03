@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args){
         while(true) {
             System.out.println("\n=== Bienvenue sur Dr. Java ===");
-            System.out.println("\n=== Veuillez vous connecter ===");
+            System.out.println("=== Veuillez vous connecter ===");
 
             Console console = System.console();
 
@@ -15,25 +15,27 @@ public class Main {
                 return;
             }
 
-            System.out.println("User/mail : ");
+            System.out.println("\nUser/mail : ");
             String user = console.readLine();
 
 
             char[] passwordArray = console.readPassword("Password : ");
-            String password = new String(passwordArray);
 
-            Utilisateurs.seConnecter(user, passwordArray);
+            boolean success = Utilisateurs.seConnecter(user, passwordArray);
 
-            if (Utilisateurs.seConnecter(user, passwordArray)) {
-                if (Utilisateurs.detecterRole(user) == Role.MEDECIN) {
-                    System.out.println("Je suis un medecin");
-                } else {
-                    System.out.println("Je suis un patient");
-                }
-                break;
-            } else {
-                System.out.println("Identifiants incorrects.");
+            if (!success) {
+                System.out.println("Échec de la connexion !");
+                continue;
             }
+
+            String prenom = Utilisateurs.getPrenom(user);
+            String role = Utilisateurs.detecterRole(user);
+
+            System.out.println("\nBienvenue sur la plateforme, " + prenom + " !");
+            System.out.println("Vous êtes connecté en tant que : " + role);
+
+            break;
+
         }
     }
 }

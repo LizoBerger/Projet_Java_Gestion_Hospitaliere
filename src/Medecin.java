@@ -28,12 +28,19 @@ public class Medecin {
         return password;
     }
 
-    public static List<Medecin> listeMedecins = new ArrayList<>(List.of(
-            new Medecin(1, "Laurent", "Houtan", "laurent.houtan@dr-java.com", "Laurent1!", LocalDate.of(1970, 12, 25)),
-            new Medecin(2, "Guy", "Tariste", "guy.tariste@dr-java.com", "Guy2$", LocalDate.of(1995, 2, 3)),
-            new Medecin(3, "Jean", "Bon", "jean.bon@dr-java.com", "Jean3#", LocalDate.of(1980, 3, 5)),
-            new Medecin(4, "Sarah", "Croche", "sarah.croche@dr-java.com", "Sarah4%", LocalDate.of(1965, 1, 21)),
-            new Medecin(5, "Tom", "Pouce", "tom.pouce@dr-java.com", "Tom5&", LocalDate.of(1987, 5, 30))
-    ));
+    public String getNom() {
+        return nom;
+    }
 
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public int getAge() {
+        return (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
+    }
+
+    public int getId() {
+        return id;
+    }
 }

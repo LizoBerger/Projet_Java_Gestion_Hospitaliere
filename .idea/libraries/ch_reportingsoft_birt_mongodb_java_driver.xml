@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="ch.reportingsoft.birt.mongodb.java.driver" type="repository">
+    <properties maven-id="ch.reportingsoft.birt:mongodb-java-driver:3.12.14" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/ch/reportingsoft/birt/mongodb-java-driver/3.12.14/mongodb-java-driver-3.12.14.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

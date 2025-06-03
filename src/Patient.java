@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +27,18 @@ public class Patient {
     public String getMotDePasse() {
         return password;
     }
-    public static List<Patient> listePatients = new ArrayList<>(List.of(
-            new Patient(6, "Alain", "Therieur", "alain.therieur@gmail.com", "Alain6!", LocalDate.of(1990, 2, 2)),
-            new Patient(7, "Anna", "Condas", "anna.condas@laposte.fr", "Anna7$", LocalDate.of(1986, 4, 1)),
-            new Patient(8, "Luc", "Idaire", "luc.idaire@yahoo.com", "Luc8#", LocalDate.of(1992, 11, 27)),
-            new Patient(9, "Emma", "Pirie", "emma.pirie@gmail.com", "Emma9%", LocalDate.of(1963, 9, 12)),
-            new Patient(10, "Justin", "Bridou", "justin.bridou@outlook.com", "Justin10&", LocalDate.of(1985, 8, 16))
-    ));
+
+    public String getNom() {
+        return nom;
+    }
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public int getAge() {
+        return (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
+    }
+    public int getId() {
+        return id;
+    }
 }
