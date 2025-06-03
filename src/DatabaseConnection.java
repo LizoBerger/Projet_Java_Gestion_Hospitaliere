@@ -1,14 +1,32 @@
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class DatabaseConnection {
-    private static final String URI = "mongodb+srv://berglizo534:Projet_java_25@cluster0.g6a1a9p.mongodb.net/";
-    private static final String DB_NAME = "Database_DrJava";
+    private static MongoDatabase database;
+
+    static {
+        try {
+            // Charger les variables d'environnement depuis le fichier .env
+            Dotenv dotenv = Dotenv.load();
+
+            // Récupérer l'URI de connexion MongoDB
+            String uri = dotenv.get("MONGO_URI");
+
+            // Créer un client MongoDB
+            MongoClient mongoClient = MongoClients.create(uri);
+
+            // Connexion à la base de données (remplacer "hopital" si besoin)
+            database = mongoClient.getDatabase("hopital");
+
+            System.out.println("Connexion à MongoDB réussie !");
+        } catch (Exception e) {
+            System.err.println("Erreur de connexion à MongoDB : " + e.getMessage());
+        }
+    }
 
     public static MongoDatabase getDatabase() {
-        MongoClient mongoClient = MongoClients.create(URI);
-        MongoDatabase database = mongoClient.getDatabase(DB_NAME);
         return database;
     }
 }
