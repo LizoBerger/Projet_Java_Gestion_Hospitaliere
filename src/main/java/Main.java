@@ -4,6 +4,9 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args){
+        DatabaseConnection.Connect();
+
+
         while(true) {
             System.out.println("\n=== Bienvenue sur Dr. Java ===");
             System.out.println("=== Veuillez vous connecter ===");

@@ -1,9 +1,7 @@
-import java.util.HashMap;
-import java.util.Map;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
-
 
 public class Utilisateurs {
 
@@ -24,6 +22,7 @@ public class Utilisateurs {
     }
 
     public static String detecterRole(String email) {
+
         MongoCollection<Document> users = DatabaseConnection.getDatabase().getCollection("users");
         Document user = users.find(Filters.eq("email", email)).first();
 
