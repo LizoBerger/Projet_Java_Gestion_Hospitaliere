@@ -1,30 +1,35 @@
+package fr.eseo.e3e.devlogiciel.projetjava.users.model;
+
+import org.bson.types.ObjectId;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 
-public class Medecin {
-    int id;
+public class Medecin extends Utilisateurs {
+    ObjectId id;
     String prenom;
     String nom;
     LocalDate dateOfBirth;
     String email;
     String password;
+    String role;
 
-    Medecin(int id, String prenom, String nom, String email, String password, LocalDate dateOfBirth) {
+    public Medecin(ObjectId id, String prenom, String nom, String email, String password, LocalDate dateOfBirth, String role) {
+        super(id, nom, prenom, email, password);
         this.id = id;
         this.prenom = prenom;
         this.nom = nom;
-        this.dateOfBirth = dateOfBirth;
         this.email = email;
         this.password = password;
+        this.dateOfBirth = dateOfBirth;
+        this.role = role;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getMotDePasse() {
+    public String getMdp() {
         return password;
     }
 
@@ -40,7 +45,9 @@ public class Medecin {
         return (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
     }
 
-    public int getId() {
+    public ObjectId getId() {
         return id;
     }
+
+    public String getRole() {return "Médecin";}
 }

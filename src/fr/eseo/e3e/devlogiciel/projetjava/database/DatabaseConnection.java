@@ -1,3 +1,5 @@
+package fr.eseo.e3e.devlogiciel.projetjava.database;
+
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
@@ -16,7 +18,7 @@ public class DatabaseConnection {
 
             String mongoUri = dotenv.get("MONGO_URI");
             MongoClient mongoClient = MongoClients.create(mongoUri);
-            database = mongoClient.getDatabase("Database_DrJava");
+            database = mongoClient.getDatabase("DrJava");
 
 
             System.out.println("Connexion à MongoDB réussie !");
