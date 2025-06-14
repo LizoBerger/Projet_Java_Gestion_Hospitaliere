@@ -23,18 +23,25 @@ public class RDV {
     Patient patient;
     Medecin medecin;
     LocalDate date;
-    LocalTime heure;
+    LocalTime heureDebut;
+    LocalTime heureFin;
+    String jour;
     String type;
-    String feedback;
+    String bilan;
     String traitementPrescrit;
 
 
-    public RDV(ObjectId _id, Patient patient, Medecin medecin, LocalDate date, LocalTime heure, String type) {
+    public RDV(ObjectId _id, Patient patient, Medecin medecin, LocalDate date, LocalTime heureDebut,LocalTime heureFin, String jour, String type) {
         this._id = _id;
         this.patient = patient;
         this.medecin = medecin;
         this.date = date;
-        this.heure = heure;
+        this.jour = jour;
+        this.heureDebut = heureDebut;
+        this.heureFin = heureFin;
+        this.bilan = "";
+        this.traitementPrescrit = "";
+        this.type = type;
     }
 
     public ObjectId getId() {
@@ -52,16 +59,23 @@ public class RDV {
         return date;
     }
 
-    public LocalTime getHeure() {
-        return heure;
+    public LocalTime getHeureDebut() {
+        return heureDebut;
+    }
+
+    public LocalTime getHeureFin() {
+        return heureFin;
+    }
+    public String getJour() {
+        return jour;
     }
 
     public String getType() {
         return this.type;
     }
 
-    public String getFeedback() {
-        return this.feedback;
+    public String getBilan() {
+        return this.bilan;
     }
 
     public String getTraitementPrescrit() {
@@ -82,15 +96,21 @@ public class RDV {
     public void setDate(LocalDate date) {
         this.date = date;
     }
-    public void setHeure(LocalTime heure) {
-        this.heure = heure;
+    public void setHeureDebut(LocalTime heure) {
+        this.heureDebut = heureDebut;
+    }
+    public void setHeureFin(LocalTime heure) {
+        this.heureFin = heure;
+    }
+    public void setJour(String jour) {
+        this.jour = jour;
     }
     public void setTraitementPrescrit(String traitementPrescrit) {
         this.traitementPrescrit = traitementPrescrit;
     }
 
-    public void setFeedback(String feedback) {
-        this.feedback = feedback;
+    public void setBilan(String bilan) {
+        this.bilan = bilan;
     }
 
     public void setType(String type) {
@@ -106,7 +126,12 @@ public class RDV {
                 "patient=" + patient.getPrenom() + " " + patient.getNom() +
                 ", medecin=" + medecin.getPrenom() + " " + medecin.getNom() +
                 ", date=" + date +
-                ", heure=" + heure +
+                ", jour=" + jour +
+                ", debut=" + heureDebut +
+                ", fin=" + heureFin +
+                ", type=" + type +
+                ", bilan=" + bilan +
+                ", traitementPrescrit=" + traitementPrescrit +
                 "}";
     }
 
@@ -118,9 +143,11 @@ public class RDV {
                 .append("patientEmail", rdv.getPatient().getEmail())
                 .append("medecinEmail", rdv.getMedecin().getEmail())
                 .append("date", rdv.getDate().toString())
-                .append("heure", rdv.getHeure().toString())
+                .append("jour", rdv.getJour())
+                .append("debut", rdv.getHeureDebut().toString())
+                .append("fin", rdv.getHeureFin().toString())
                 .append("type", rdv.getType())
-                .append("feedback", rdv.getFeedback())
+                .append("bilan", rdv.getBilan())
                 .append("traitementPrescrit", rdv.getTraitementPrescrit());
 
         rdvCollection.insertOne(doc);
@@ -133,31 +160,5 @@ public class RDV {
         System.out.println("Rendez-vous annulé.");
     }
 
-    public static List<RDV> getRDVinBD(String emailPatient) {
-        List<RDV> rdvs = new ArrayList<>();
-        MongoCollection<Document> rdvCollection = DatabaseConnection.getDatabase().getCollection("RDV");
-
-        for (Document doc : rdvCollection.find(Filters.eq("patientEmail", emailPatient))) {
-            Patient patient = (Patient) UtilisateursFactory.UtilisateurFromEmail(emailPatient);
-            Medecin medecin = (Medecin) UtilisateursFactory.UtilisateurFromEmail(doc.getString("medecinEmail"));
-
-            RDV rdv = new RDV(
-                    doc.getObjectId("_id"),
-                    patient,
-                    medecin,
-                    LocalDate.parse(doc.getString("date")),
-                    LocalTime.parse(doc.getString("heure")),
-                    doc.getString("type")
-            );
-            rdv.setType(doc.getString("type"));
-            rdv.setFeedback(doc.getString("feedback"));
-            rdv.setTraitementPrescrit(doc.getString("traitementPrescrit"));
-
-            rdvs.add(rdv);
-        }
-
-
-        return rdvs;
-    }
 
 }

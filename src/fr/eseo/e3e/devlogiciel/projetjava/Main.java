@@ -7,6 +7,7 @@ import fr.eseo.e3e.devlogiciel.projetjava.users.model.Medecin;
 import fr.eseo.e3e.devlogiciel.projetjava.users.model.Patient;
 import fr.eseo.e3e.devlogiciel.projetjava.users.model.Utilisateurs;
 import fr.eseo.e3e.devlogiciel.projetjava.users.service.AuthService;
+import fr.eseo.e3e.devlogiciel.projetjava.users.service.MedecinService;
 import fr.eseo.e3e.devlogiciel.projetjava.users.service.PatientService;
 import org.bson.types.ObjectId;
 
@@ -27,9 +28,9 @@ public class Main {
         mongoLogger.setLevel(Level.SEVERE);
         Scanner scanner = new Scanner(System.in);
         DatabaseConnection.Connect();
+        boolean running = true;
 
-
-        while (true) {
+        while (running) {
             System.out.println("\n=== Bienvenue sur Dr. Java ===");
             System.out.println("=== Veuillez vous connecter ===");
 
@@ -43,30 +44,28 @@ public class Main {
             boolean connected = AuthService.seConnecter(email, mdp.toCharArray());
             Utilisateurs utilisateur = UtilisateursFactory.UtilisateurFromEmail(email);
 
-            if (utilisateur == null) {
-                System.out.println("Utilisateur introuvable !");
-                continue;
-            }
 
-            if (connected) {
-                System.out.println("Connexion réussie !\n");
-
-            } else {
+            if (!connected || utilisateur == null) {
                 System.out.println("Email ou mot de passe incorrect.\n");
+                continue; // Retour à la demande de connexion
             }
+
+            System.out.println("Connexion réussie !");
+
             String role = utilisateur.getRole();
             String nomPrenom = Utilisateurs.getNomComplet(email);
             System.out.println("Bonjour " + nomPrenom);
             System.out.println("Vous êtes connecté(e) en tant que " + role + "\n");
 
-
-            if (utilisateur instanceof Patient patient) {
-                while (true) {
+            boolean sessionActive = true;
+            while (sessionActive) {
+                if (utilisateur instanceof Patient patient) {
                     System.out.println("Veuillez choisir une action : \n");
                     System.out.println("1. Prendre RDV");
                     System.out.println("2. Annuler RDV");
                     System.out.println("3. Prendre une urgence");
                     System.out.println("4. Mes Rendez-vous");
+                    System.out.println("5. Déconnexion");
                     int choix;
                     if (scanner.hasNextInt()) {
                         choix = scanner.nextInt();
@@ -83,34 +82,67 @@ public class Main {
 
 
                             System.out.println("Choisissez un médecin parmi la liste suivante :");
-                            System.out.println("1 - Dr. Houtan(laurent.houtan@dr-java.com)");
-                            System.out.println("2 - Dr. Tariste (guy.tariste@dr-java.com)");
-                            System.out.println("3 - Dr. Bon (jean.bon@dr-java.com)");
-                            System.out.println("4 - Dr. Croche (sarah.croche@dr-java.com)");
-                            System.out.println("5 - Dr. Pouce (tom.pouce@dr-java.com)");
+                            System.out.println("1 - Dr. Houtan");
+                            System.out.println("2 - Dr. Tariste");
+                            System.out.println("3 - Dr. Bon");
+                            System.out.println("4 - Dr. Croche");
+                            System.out.println("5 - Dr. Pouce");
 
 
-                            System.out.print("Email du médecin : ");
-                            String emailMedecin = scanner.nextLine();
-                            Medecin medecin = (Medecin) UtilisateursFactory.UtilisateurFromEmail(emailMedecin);
+                            System.out.print("Nom du médecin : ");
+                            String nomMedecin = scanner.nextLine();
+                            Medecin medecin = (Medecin) UtilisateursFactory.UtilisateurFromNom(nomMedecin);
                             if (medecin == null) {
                                 System.out.println("Médecin introuvable avec cet email.");
+                                break;
                             }
 
-                            LocalDateTime dateHeureChoisie = demanderDateHeureRdv(scanner);
+
+                            LocalDateTime dateHeureChoisie = demanderDateHeureRdv(scanner, medecin);
                             LocalDate dateChoisie = dateHeureChoisie.toLocalDate();
-                            LocalTime heureChoisie = dateHeureChoisie.toLocalTime();
+
+                            LocalTime heureDebut = dateHeureChoisie.toLocalTime();
+                            LocalTime heureFin = heureDebut.plusMinutes(30);
+
+
 
                             System.out.println("Quel est le type de consultation ?");
-                            String typeConsultation = scanner.nextLine();
+                            System.out.println("1 - Consultation générale");
+                            System.out.println("2 - Consultation spécialisée");
+                            System.out.println("3 - Suivi");
+
+                            int typeChoisi = 0;
+                            while (true) {
+                                if (scanner.hasNextInt()) {
+                                    typeChoisi = scanner.nextInt();
+                                    scanner.nextLine();
+                                    if (typeChoisi >= 1 && typeChoisi <= 4) {
+                                        break;
+                                    } else {
+                                        System.out.println("Veuillez choisir un nombre entre 1 et 4.");
+                                    }
+                                } else {
+                                    System.out.println("Entrée invalide, veuillez entrer un nombre.");
+                                    scanner.nextLine();
+                                }
+                            }
+
+                            String typeRdv;
+                            switch (typeChoisi) {
+                                case 1 -> typeRdv = "Consultation générale";
+                                case 2 -> typeRdv = "Consultation spécialisée";
+                                case 3 -> typeRdv = "Suivi";
+                                default -> typeRdv = "Inconnu";
+                            }
 
 
                             try {
                                 LocalDate date = LocalDate.parse(dateChoisie.toString());
-                                LocalTime heure = LocalTime.parse(heureChoisie.toString());
+                                String jour = dateChoisie.getDayOfWeek().toString();
                                 if (patient != null && medecin != null) {
                                     ObjectId id = new ObjectId();
-                                    RDV rdv = new RDV(id, patient, medecin, date, heure, typeConsultation);
+                                    RDV rdv = new RDV(id, patient, medecin, date, heureDebut, heureFin, jour, typeRdv);
+                                    rdv.setType(typeRdv);
                                     RDV.setRdv(rdv);
                                     System.out.println("Rendez-vous ajouté : " + rdv);
                                 } else {
@@ -128,7 +160,7 @@ public class Main {
                                 System.out.println("Vous n'avez aucun rendez-vous.");
                             } else {
                                 for (int i = 0; i < rdvsPatient.size(); i++) {
-                                    System.out.println((i+1) + " - " + rdvsPatient.get(i));
+                                    System.out.println((i + 1) + " - " + rdvsPatient.get(i));
                                 }
 
                                 System.out.println("Entrez le numéro du rendez-vous à annuler :");
@@ -136,13 +168,13 @@ public class Main {
                                 RDV rdvToDelete = rdvsPatient.get(choix_annuler - 1);
                                 ObjectId id = rdvToDelete.getId();
                                 RDV.dropRdv(id);
-                                System.out.println(id);
                             }
                             break;
                         case 3:
+
                             break;
                         case 4:
-                            List<RDV> mesRdv = RDV.getRDVinBD(patient.getEmail());
+                            List<RDV> mesRdv = PatientService.getRdvPatient(patient.getEmail());
                             if (mesRdv.isEmpty()) {
                                 System.out.println("Vous n'avez aucun rendez-vous.");
                             } else {
@@ -151,30 +183,115 @@ public class Main {
                                 }
                             }
                             break;
+                        case 5:
+                            sessionActive = false;
+                            break;
+                        default:
+                            System.out.println("Action invalide");
+                            break;
 
                     }
                 }
 
 
+
+
+                if (utilisateur instanceof Medecin medecin) {
+                    System.out.println("Veuillez choisir une action : \n");
+                    System.out.println("1. Afficher le planning du jour");
+                    System.out.println("2. Faire un bilan sur une consultation");
+                    System.out.println("3. Historique des consultations d'un patient ");
+                    System.out.println("4. Déconnexion");
+
+                    int choix;
+                    if (scanner.hasNextInt()) {
+                        choix = scanner.nextInt();
+                        scanner.nextLine();
+                    } else {
+                        System.out.println("Entrée invalide, veuillez entrer un nombre !");
+                        scanner.next();
+                        continue;
+                    }
+                    switch (choix) {
+                        case 1:
+                            LocalDate today = LocalDate.now();
+                            List<RDV> rdvsDuJour = MedecinService.getRdvMedecin(medecin.getEmail(), today);
+
+                            if (rdvsDuJour.isEmpty()) {
+                                System.out.println("Vous n'avez aucun patient aujourd'hui.");
+                            } else {
+                                System.out.println("Planning du jour (" + today + ") :");
+                                for (int i = 0; i < rdvsDuJour.size(); i++) {
+                                    System.out.println((i + 1) + " - " + rdvsDuJour.get(i));
+                                }
+                            }
+                            break;
+                        case 2:
+                            List<RDV> rdvs = MedecinService.getRdvMedecin(medecin.getEmail(), LocalDate.now());
+
+                            if (rdvs.isEmpty()) {
+                                System.out.println("Vous n'avez aucun rendez-vous aujourd'hui.");
+                            } else {
+                                for (int i = 0; i < rdvs.size(); i++) {
+                                    System.out.println((i + 1) + " - " + rdvs.get(i));
+                                }
+
+                                System.out.println("Sélectionnez le rendez-vous pour ajouter un bilan :");
+                                int choixRDV = scanner.nextInt();
+                                scanner.nextLine();
+
+                                RDV rdv = rdvs.get(choixRDV - 1);
+
+                                System.out.println("Rédigez le bilan de cette consultation :");
+                                String bilan = scanner.nextLine();
+
+                                MedecinService.addBilan(rdv.getId(), bilan);
+                                System.out.println("Bilan ajouté !");
+                            }
+                            break;
+
+                        case 3:
+                            System.out.print("Entrez le Nom du patient : ");
+                            String emailPatient = scanner.nextLine();
+
+                            List<RDV> rdvsPatient = PatientService.getRdvPatient(emailPatient);
+
+                            if (rdvsPatient.isEmpty()) {
+                                System.out.println("Aucun rendez-vous trouvé pour ce patient.");
+                            } else {
+                                System.out.println("Historique des consultations de " + Patient.getNomComplet(emailPatient) + " :");
+                                for (RDV r : rdvsPatient) {
+                                    System.out.println(r);
+                                    if (r.getBilan() != null && !r.getBilan().isEmpty()) {
+                                        System.out.println("  → Bilan : " + r.getBilan());
+                                    }
+                                }
+                            }
+                            break;
+                        case 4:
+                            sessionActive = false;
+                            break;
+                        default:
+                            System.out.println("Action invalide");
+                            break;
+                    }
+                }
             }
 
-            if (utilisateur instanceof Medecin medecin) {
-                System.out.println("Veuillez choisir une action : \n");
-                System.out.println("1. Afficher le planning du jour");
-                System.out.println("2. Faire un bilan sur une consultation");
-                System.out.println("3. Historique des consultations d'un patient ");
-            }
 
-            scanner.close();
         }
+        scanner.close();
+
     }
 
-    public static LocalDateTime demanderDateHeureRdv(Scanner scanner) {
+    public static LocalDateTime demanderDateHeureRdv(Scanner scanner, Medecin medecin) {
         while (true) {
             try {
                 System.out.print("Date du RDV (format AAAA-MM-JJ) : ");
                 String dateStr = scanner.nextLine();
                 LocalDate dateChoisie = LocalDate.parse(dateStr);
+
+                MedecinService.afficherHorairesDisponibles(medecin, dateChoisie);
 
                 System.out.print("Heure du RDV (format HH:MM) : ");
                 String heureStr = scanner.nextLine();
@@ -187,11 +304,11 @@ public class Main {
                 } else {
                     return dateHeureChoisie;
                 }
-            } catch (Exception e) {
-                System.out.println("Format invalide. Veuillez respecter le format AAAA-MM-JJ pour la date et HH:MM pour l'heure.");
+            } finally {
             }
         }
     }
+
 }
 
 

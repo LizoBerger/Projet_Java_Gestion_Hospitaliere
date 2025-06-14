@@ -3,6 +3,7 @@ package fr.eseo.e3e.devlogiciel.projetjava.users.service;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import fr.eseo.e3e.devlogiciel.projetjava.consultation.model.RDV;
+import fr.eseo.e3e.devlogiciel.projetjava.consultation.service.CréneauxGenerator;
 import fr.eseo.e3e.devlogiciel.projetjava.database.DatabaseConnection;
 import fr.eseo.e3e.devlogiciel.projetjava.users.factory.UtilisateursFactory;
 import fr.eseo.e3e.devlogiciel.projetjava.users.model.Medecin;
@@ -24,22 +25,43 @@ public class PatientService {
             Patient patient = (Patient) UtilisateursFactory.UtilisateurFromEmail(emailPatient);
             Medecin medecin = (Medecin) UtilisateursFactory.UtilisateurFromEmail(doc.getString("medecinEmail"));
 
-            RDV rdv = new RDV(
-                    doc.getObjectId("_id"),
-                    patient,
-                    medecin,
-                    LocalDate.parse(doc.getString("date")),
-                    LocalTime.parse(doc.getString("heure")),
-                    doc.getString("type")
-            );
-            rdv.setType(doc.getString("type"));
+            if (doc.getString("date") == null || doc.getString("debut") == null || doc.getString("fin") == null) {
+                System.err.println("Un RDV contient des données manquantes et sera ignoré : " + doc);
+                continue;
+            }
 
-            rdvs.add(rdv);
+            try {
+                RDV rdv = new RDV(
+                        doc.getObjectId("_id"),
+                        patient,
+                        medecin,
+                        LocalDate.parse(doc.getString("date")),
+                        LocalTime.parse(doc.getString("heureDebut")),
+                        LocalTime.parse(doc.getString("heureFin")),
+                        doc.getString("jour"),
+                        doc.getString("type")
+                );
+                rdv.setType(doc.getString("type"));
+
+                rdvs.add(rdv);
+            } catch (Exception e) {
+                System.err.println("Erreur lors de la conversion des données du document RDV : " + doc);
+                e.printStackTrace(); // Pour faciliter le débogage
+            }
+        }
+        return rdvs;
+    }
+
+    public static void afficherCreneauxPourMedecin(String emailMedecin) {
+        Medecin medecin = (Medecin) UtilisateursFactory.UtilisateurFromEmail(emailMedecin);
+        if (medecin == null) {
+            System.out.println("Médecin introuvable");
+            return;
         }
 
-
-
-
-        return rdvs;
+        List<String> creneaux = CréneauxGenerator.genererCreneauxPourMedecin(medecin, 30);
+        for (String creneau : creneaux) {
+            System.out.println(creneau);
+        }
     }
 }

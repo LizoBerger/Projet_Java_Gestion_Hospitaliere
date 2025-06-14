@@ -1,9 +1,13 @@
 package fr.eseo.e3e.devlogiciel.projetjava.users.model;
 
+import fr.eseo.e3e.devlogiciel.projetjava.consultation.service.ConsultationService;
 import org.bson.types.ObjectId;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Medecin extends Utilisateurs {
     ObjectId id;
@@ -13,8 +17,10 @@ public class Medecin extends Utilisateurs {
     String email;
     String password;
     String role;
+    private Map<String, List<ConsultationService>> horairesConsultation;
 
-    public Medecin(ObjectId id, String prenom, String nom, String email, String password, LocalDate dateOfBirth, String role) {
+
+    public Medecin(ObjectId id, String prenom, String nom, String email, String password, LocalDate dateOfBirth, String role, Map<String, List<ConsultationService>> horairesConsultation) {
         super(id, nom, prenom, email, password);
         this.id = id;
         this.prenom = prenom;
@@ -23,6 +29,7 @@ public class Medecin extends Utilisateurs {
         this.password = password;
         this.dateOfBirth = dateOfBirth;
         this.role = role;
+        this.horairesConsultation = horairesConsultation;
     }
 
     public String getEmail() {
@@ -50,4 +57,9 @@ public class Medecin extends Utilisateurs {
     }
 
     public String getRole() {return "Médecin";}
+
+    public Map<String, List<ConsultationService>> getHorairesConsultation() {
+        return horairesConsultation;
+    }
+
 }
