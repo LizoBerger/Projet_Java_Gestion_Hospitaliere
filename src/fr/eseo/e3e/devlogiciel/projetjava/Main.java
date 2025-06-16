@@ -104,7 +104,7 @@ public class Main {
                             String nomMedecin = scanner.nextLine();
                             Medecin medecin = (Medecin) UtilisateursFactory.UtilisateurFromNom(nomMedecin);
                             if (medecin == null) {
-                                System.out.println("Médecin introuvable avec cet email.");
+                                System.out.println("Médecin introuvable avec ce nom.");
                                 break;
                             }
 

@@ -74,4 +74,8 @@ public abstract class Utilisateurs {
 
         return user.getString("Prénom") + " " + user.getString("Nom");
     }
+
+    public String getEmail() {
+        return email;
+    }
 }
