@@ -59,7 +59,8 @@ public class UtilisateursFactory {
                     doc.getString("Role")
             );
         } else if ("Médecin".equalsIgnoreCase(role)) {
-            String jsonHoraires = doc.getString("horairesConsultation");
+            Document horairesDoc = (Document) doc.get("horairesConsultation");
+            String jsonHoraires = horairesDoc.toJson();
             Map<String, List<ConsultationService>> horaires = parseHoraires(jsonHoraires);
 
             return new Medecin(
@@ -105,7 +106,8 @@ public class UtilisateursFactory {
                     doc.getString("Role")
             );
         } else if ("Médecin".equalsIgnoreCase(role)) {
-            String jsonHoraires = doc.getString("horairesConsultation");
+            Document horairesDoc = (Document) doc.get("horairesConsultation");
+            String jsonHoraires = horairesDoc.toJson();
             Map<String, List<ConsultationService>> horaires = parseHoraires(jsonHoraires);
 
             return new Medecin(

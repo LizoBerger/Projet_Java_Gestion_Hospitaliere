@@ -24,8 +24,6 @@ public class AuthServiceTest {
     static void setUp() {
         DatabaseConnection.Connect(); // Assure que la base est connectée AVANT d'utiliser AuthService
         AuthService authService = new AuthService();
-
-
     }
 
     @Test

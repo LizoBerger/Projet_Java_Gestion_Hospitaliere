@@ -15,7 +15,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class DatabaseConnection {
 
     /** Instance statique de la base de données MongoDB */
-    private static MongoDatabase database;
+    public static MongoDatabase database;
 
     /**
      * @brief Initialise la connexion à MongoDB.

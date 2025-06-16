@@ -1,0 +1,127 @@
+[{
+  "_id": {
+    "$oid": "684fd66bff625f22df59568b"
+  },
+  "Prénom": "Jean",
+  "Nom": "Dupont",
+  "Email": "medecin@dr-java.com",
+  "Password": "mdp",
+  "Date of birth": {
+    "$date": "1979-12-31T23:00:00.000Z"
+  },
+  "Role": "Médecin",
+  "horairesConsultation": {
+    "lundi": [
+      "09:00-12:00",
+      "14:00-17:00"
+    ],
+    "mardi": [
+      "09:00-12:00"
+    ],
+    "mercredi": [],
+    "jeudi": [
+      "14:00-18:00"
+    ],
+    "vendredi": [
+      "09:00-12:00"
+    ]
+  }
+},
+{
+  "_id": {
+    "$oid": "684fd66cff625f22df59568c"
+  },
+  "Prénom": "Alice",
+  "Nom": "Martin",
+  "Email": "patient@example.com",
+  "Password": "mdp",
+  "Date of birth": {
+    "$date": "1990-05-14T22:00:00.000Z"
+  },
+  "Role": "Patient"
+},
+{
+  "_id": {
+    "$oid": "684fe33b94336f55d072186a"
+  },
+  "Prénom": "Alice",
+  "Nom": "Dupont",
+  "Email": "alice.dupont@example.com",
+  "Password": "motdepasse123",
+  "Date of birth": {
+    "$date": "1990-05-14T22:00:00.000Z"
+  },
+  "Role": "Patient"
+},
+{
+  "_id": {
+    "$oid": "684fe38e94336f55d072186b"
+  },
+  "Prénom": "Lucas",
+  "Nom": "Martin",
+  "Email": "lucas.martin@example.com",
+  "Password": "lucas456",
+  "Date of birth": {
+    "$date": "1990-05-14T22:00:00.000Z"
+  },
+  "Role": "Patient"
+},
+{
+  "_id": {
+    "$oid": "684fe3c994336f55d072186c"
+  },
+  "Prénom": "Henri",
+  "Nom": "Durand",
+  "Email": "henri.durand@dr-java.com",
+  "Password": "medecin123",
+  "Date of birth": {
+    "$date": "1990-05-14T22:00:00.000Z"
+  },
+  "Role": "Médecin",
+  "horairesConsultation": {
+    "lundi": [
+      "09:00-12:00",
+      "14:00-17:00"
+    ],
+    "mardi": [
+      "09:00-12:00"
+    ],
+    "mercredi": [],
+    "jeudi": [
+      "14:00-18:00"
+    ],
+    "vendredi": [
+      "09:00-12:00"
+    ]
+  }
+},
+{
+  "_id": {
+    "$oid": "684fe3f994336f55d072186d"
+  },
+  "Prénom": "Claire",
+  "Nom": "Bernard",
+  "Email": "claire.bernard@dr-java.com",
+  "Password": "claire456",
+  "Date of birth": {
+    "$date": "1990-05-14T22:00:00.000Z"
+  },
+  "Role": "Médecin",
+  "horairesConsultation": {
+    "lundi": [
+      "10:00-13:00"
+    ],
+    "mardi": [
+      "14:00-18:00"
+    ],
+    "mercredi": [
+      "09:00-12:00",
+      "14:00-17:00"
+    ],
+    "jeudi": [],
+    "vendredi": [
+      "09:00-12:00",
+      "14:00-16:00"
+    ]
+  }
+}]

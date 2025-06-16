@@ -93,11 +93,10 @@ public class Main {
 
 
                             System.out.println("Choisissez un médecin parmi la liste suivante :");
-                            System.out.println("1 - Dr. Houtan");
-                            System.out.println("2 - Dr. Tariste");
-                            System.out.println("3 - Dr. Bon");
-                            System.out.println("4 - Dr. Croche");
-                            System.out.println("5 - Dr. Pouce");
+                            System.out.println("1 - Dr. Durand");
+                            System.out.println("2 - Dr. Bernard");
+                            System.out.println("3 - Dr. Dupont");
+
 
 
                             System.out.print("Nom du médecin : ");

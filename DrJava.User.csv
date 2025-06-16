@@ -1,0 +1,7 @@
+_id,Prénom,Nom,Email,Password,Date of birth,Role,horairesConsultation.lundi[0],horairesConsultation.lundi[1],horairesConsultation.mardi[0],horairesConsultation.jeudi[0],horairesConsultation.vendredi[0],horairesConsultation.vendredi[1],horairesConsultation.mercredi[0],horairesConsultation.mercredi[1]
+684fd66bff625f22df59568b,Jean,Dupont,medecin@dr-java.com,mdp,1979-12-31T23:00:00.000Z,Médecin,09:00-12:00,14:00-17:00,09:00-12:00,14:00-18:00,09:00-12:00,,,
+684fd66cff625f22df59568c,Alice,Martin,patient@example.com,mdp,1990-05-14T22:00:00.000Z,Patient,,,,,,,,
+684fe33b94336f55d072186a,Alice,Dupont,alice.dupont@example.com,motdepasse123,1990-05-14T22:00:00.000Z,Patient,,,,,,,,
+684fe38e94336f55d072186b,Lucas,Martin,lucas.martin@example.com,lucas456,1990-05-14T22:00:00.000Z,Patient,,,,,,,,
+684fe3c994336f55d072186c,Henri,Durand,henri.durand@dr-java.com,medecin123,1990-05-14T22:00:00.000Z,Médecin,09:00-12:00,14:00-17:00,09:00-12:00,14:00-18:00,09:00-12:00,,,
+684fe3f994336f55d072186d,Claire,Bernard,claire.bernard@dr-java.com,claire456,1990-05-14T22:00:00.000Z,Médecin,10:00-13:00,,14:00-18:00,,09:00-12:00,14:00-16:00,09:00-12:00,14:00-17:00

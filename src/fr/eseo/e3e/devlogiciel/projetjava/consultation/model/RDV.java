@@ -253,20 +253,21 @@ public class RDV {
      * @param rdv Rendez-vous à insérer
      */
     public static void setRdv(RDV rdv) {
-        MongoCollection<Document> rdvCollection = DatabaseConnection.getDatabase().getCollection("RDV");
-        ObjectId id = new ObjectId();
-        Document doc = new Document("_id", id)
+        MongoCollection<Document> collection = DatabaseConnection.getDatabase().getCollection("RDV");
+
+        Document document = new Document()
                 .append("patientEmail", rdv.getPatient().getEmail())
                 .append("medecinEmail", rdv.getMedecin().getEmail())
                 .append("date", rdv.getDate().toString())
+                .append("heureDebut", rdv.getHeureDebut().toString())
+                .append("heureFin", rdv.getHeureFin().toString())
                 .append("jour", rdv.getJour())
-                .append("debut", rdv.getHeureDebut().toString())
-                .append("fin", rdv.getHeureFin().toString())
                 .append("type", rdv.getType())
-                .append("bilan", rdv.getBilan())
                 .append("traitementPrescrit", rdv.getTraitementPrescrit());
 
-        rdvCollection.insertOne(doc);
+        collection.insertOne(document);
+
+        ObjectId id = document.getObjectId("_id");
         rdv.setId(id);
     }
 
@@ -277,8 +278,13 @@ public class RDV {
      */
     public static void dropRdv(ObjectId id) {
         MongoCollection<Document> rdvCollection = DatabaseConnection.getDatabase().getCollection("RDV");
-        rdvCollection.deleteOne(Filters.eq("_id", id));
-        System.out.println("Rendez-vous annulé.");
+        long deletedCount = rdvCollection.deleteOne(Filters.eq("_id", id)).getDeletedCount();
+
+        if (deletedCount > 0) {
+            System.out.println("Rendez-vous annulé avec succès. ID = " + id);
+        } else {
+            System.out.println("Aucun rendez-vous trouvé avec l'ID : " + id);
+        }
     }
 
     /**
@@ -294,4 +300,6 @@ public class RDV {
                 new Document("$set", new Document("traitementPrescrit", traitement.name()))
         );
     }
+
+
 }

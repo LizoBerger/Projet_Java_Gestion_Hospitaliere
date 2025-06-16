@@ -91,4 +91,16 @@ public class Patient extends Utilisateurs {
     public String getRole() {
         return "Patient";
     }
+
+    public String setEmail(String email) {
+        return this.email = email;
+    }
+
+    public String setPrenom(String prenom) {
+        return this.prenom = prenom;
+    }
+
+    public String setNom(String nom) {
+        return this.nom = nom;
+    }
 }

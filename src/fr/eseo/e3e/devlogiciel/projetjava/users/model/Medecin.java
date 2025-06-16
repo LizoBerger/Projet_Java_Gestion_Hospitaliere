@@ -108,4 +108,16 @@ public class Medecin extends Utilisateurs {
     public Map<String, List<ConsultationService>> getHorairesConsultation() {
         return horairesConsultation;
     }
+
+    public String setEmail(String mail) {
+        return this.email = mail;
+    }
+
+    public String setPrenom(String prenom) {
+        return this.prenom = prenom;
+    }
+
+    public String setNom(String nom) {
+        return this.nom = nom;
+    }
 }

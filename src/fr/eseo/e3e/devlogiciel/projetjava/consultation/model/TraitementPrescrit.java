@@ -4,6 +4,8 @@ package fr.eseo.e3e.devlogiciel.projetjava.consultation.model;
  * Enumération représentant différents traitements médicaux prescrits.
  */
 public enum TraitementPrescrit {
+    AUCUN,
+    NOUVEAU_TRAITEMENT,
     PARACETAMOL,
     IBUPROFENE,
     ASPIRINE,

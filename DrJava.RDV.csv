@@ -1,0 +1,3 @@
+_id,medecinEmail,patientEmail,date,debut,fin,jour,type,traitementPrescrit,bilan,heureDebut,heureFin
+684fd66bff625f22df59568a,medecin@example.com,patient@example.com,2025-06-16,09:00,09:30,lundi,consultation,aucun,bon état,,
+685017d86f00e723eae8108f,henri.durand@dr-java.com,patient@example.com,2025-06-16,,,MONDAY,Consultation spécialisée,,,16:30,17:00

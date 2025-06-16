@@ -1,0 +1,27 @@
+[{
+  "_id": {
+    "$oid": "684fd66bff625f22df59568a"
+  },
+  "medecinEmail": "medecin@example.com",
+  "patientEmail": "patient@example.com",
+  "date": "2025-06-16",
+  "debut": "09:00",
+  "fin": "09:30",
+  "jour": "lundi",
+  "type": "consultation",
+  "traitementPrescrit": "aucun",
+  "bilan": "bon état"
+},
+{
+  "_id": {
+    "$oid": "685017d86f00e723eae8108f"
+  },
+  "patientEmail": "patient@example.com",
+  "medecinEmail": "henri.durand@dr-java.com",
+  "date": "2025-06-16",
+  "heureDebut": "16:30",
+  "heureFin": "17:00",
+  "jour": "MONDAY",
+  "type": "Consultation spécialisée",
+  "traitementPrescrit": ""
+}]
