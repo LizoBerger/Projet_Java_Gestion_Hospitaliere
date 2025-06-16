@@ -1,6 +1,9 @@
 package fr.eseo.e3e.devlogiciel.projetjava;
 
 import fr.eseo.e3e.devlogiciel.projetjava.consultation.model.RDV;
+import fr.eseo.e3e.devlogiciel.projetjava.consultation.model.Symptomes;
+import fr.eseo.e3e.devlogiciel.projetjava.consultation.model.TraitementPrescrit;
+import fr.eseo.e3e.devlogiciel.projetjava.consultation.model.Urgences;
 import fr.eseo.e3e.devlogiciel.projetjava.database.DatabaseConnection;
 import fr.eseo.e3e.devlogiciel.projetjava.users.factory.UtilisateursFactory;
 import fr.eseo.e3e.devlogiciel.projetjava.users.model.Medecin;
@@ -22,7 +25,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
+
 public class Main {
+    /**
+     * @brief Point d'entrée de l'application.
+     *
+     * Initialise les ressources et démarre le programme.
+     *
+     * @param args Arguments de la ligne de commande (non utilisés).
+     */
     public static void main(String[] args) {
         Logger mongoLogger = Logger.getLogger("org.mongodb.driver");
         mongoLogger.setLevel(Level.SEVERE);
@@ -141,7 +152,7 @@ public class Main {
                                 String jour = dateChoisie.getDayOfWeek().toString();
                                 if (patient != null && medecin != null) {
                                     ObjectId id = new ObjectId();
-                                    RDV rdv = new RDV(id, patient, medecin, date, heureDebut, heureFin, jour, typeRdv);
+                                    RDV rdv = new RDV(id, patient, medecin, date, heureDebut, heureFin, jour, typeRdv, null, null);
                                     rdv.setType(typeRdv);
                                     RDV.setRdv(rdv);
                                     System.out.println("Rendez-vous ajouté : " + rdv);
@@ -171,7 +182,20 @@ public class Main {
                             }
                             break;
                         case 3:
+                            Symptomes symptomeUrgence = Urgences.demanderSymptome(scanner);
+                            System.out.println("Vous avez choisi : " + symptomeUrgence.name() + " avec priorité " + symptomeUrgence.getPriorite());
 
+                            RDV rdvUrgence = Urgences.prendreUrgence(patient, symptomeUrgence);
+
+                            if (rdvUrgence != null) {
+                                System.out.println("RDV d'urgence pris avec succès !");
+                                System.out.println("Médecin : Dr. " + rdvUrgence.getMedecin().getNom());
+                                System.out.println("Date : " + rdvUrgence.getDate());
+                                System.out.println("Heure : " + rdvUrgence.getHeureDebut() + " - " + rdvUrgence.getHeureFin());
+                                System.out.println("Symptôme : " + symptomeUrgence.name());
+                            } else {
+                                System.out.println("Désolé, aucun créneau d'urgence disponible dans la semaine à venir.");
+                            }
                             break;
                         case 4:
                             List<RDV> mesRdv = PatientService.getRdvPatient(patient.getEmail());
@@ -247,11 +271,35 @@ public class Main {
 
                                 MedecinService.addBilan(rdv.getId(), bilan);
                                 System.out.println("Bilan ajouté !");
-                            }
-                            break;
 
+                                System.out.println("Veuillez choisir un traitement prescrit :");
+                                TraitementPrescrit.afficherTraitements();
+
+                                int choixTraitement = -1;
+                                while (choixTraitement < 1 || choixTraitement > TraitementPrescrit.values().length) {
+                                    System.out.print("Entrez le numéro du traitement : ");
+                                    if (scanner.hasNextInt()) {
+                                        choixTraitement = scanner.nextInt();
+                                        scanner.nextLine();
+                                    } else {
+                                        System.out.println("Entrée invalide. Veuillez entrer un nombre.");
+                                        scanner.nextLine();
+                                    }
+                                }
+
+                                TraitementPrescrit traitementChoisi = TraitementPrescrit.fromInt(choixTraitement);
+                                System.out.println("Traitement prescrit : " + traitementChoisi);
+
+                                rdv.setTraitementPrescrit(traitementChoisi.name());
+
+                                RDV.mettreAJourTraitement(rdv.getId(), traitementChoisi);
+                            }
+
+
+
+                            break;
                         case 3:
-                            System.out.print("Entrez le Nom du patient : ");
+                            System.out.print("Entrez l'email du patient : ");
                             String emailPatient = scanner.nextLine();
 
                             List<RDV> rdvsPatient = PatientService.getRdvPatient(emailPatient);

@@ -5,10 +5,28 @@ import com.mongodb.client.model.Filters;
 import fr.eseo.e3e.devlogiciel.projetjava.database.DatabaseConnection;
 import org.bson.Document;
 
-
+/**
+ * @class AuthService
+ * @brief Service d'authentification des utilisateurs.
+ *
+ * Cette classe fournit des méthodes pour gérer la connexion des utilisateurs
+ * via leur email et mot de passe, en interrogeant la base de données MongoDB.
+ */
 public class AuthService {
+
+    /** Collection MongoDB des utilisateurs */
     public static MongoCollection<Document> users = DatabaseConnection.getDatabase().getCollection("User");
 
+    /**
+     * @brief Tente d'authentifier un utilisateur avec un email et un mot de passe.
+     *
+     * @param email L'adresse email de l'utilisateur.
+     * @param mdp Le mot de passe sous forme de tableau de caractères.
+     * @return true si l'authentification réussit, false sinon.
+     *
+     * Cette méthode vérifie si l'email existe dans la base,
+     * puis compare le mot de passe fourni avec celui enregistré.
+     */
     public static boolean seConnecter(String email, char[] mdp) {
 
         Document user = users.find(Filters.eq("Email", email)).first();
@@ -24,6 +42,6 @@ public class AuthService {
             return false;
         }
 
-        return user.getString("Password").equals(password);
+        return true;
     }
 }

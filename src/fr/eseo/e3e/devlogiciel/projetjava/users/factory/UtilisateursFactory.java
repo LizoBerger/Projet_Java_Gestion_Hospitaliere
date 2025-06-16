@@ -15,10 +15,30 @@ import java.util.Map;
 
 import static fr.eseo.e3e.devlogiciel.projetjava.consultation.service.ParseHoraire.parseHoraires;
 
-
+/**
+ * @class UtilisateursFactory
+ * @brief Factory pour créer des instances de {@link Utilisateurs} (Patient ou Médecin)
+ *        à partir de la base de données MongoDB.
+ *
+ * Fournit des méthodes statiques pour récupérer un utilisateur depuis la collection "User"
+ * selon l'email ou le nom, et instancie la bonne classe fille (Patient ou Medecin).
+ */
 public class UtilisateursFactory {
+
+    /** Collection MongoDB "User" */
     private static MongoCollection<Document> users = DatabaseConnection.getDatabase().getCollection("User");
 
+    /**
+     * @brief Récupère un utilisateur à partir de son adresse email.
+     *
+     * @param email L'email de l'utilisateur recherché.
+     * @return Une instance de {@link Patient} ou {@link Medecin} si trouvée, sinon null.
+     *
+     * @details
+     * - Interroge la collection MongoDB "User" avec le filtre sur "Email".
+     * - Selon le champ "Role" dans la base, instancie un Patient ou un Médecin.
+     * - Pour un Médecin, parse les horaires de consultation au format JSON en Map.
+     */
     public static Utilisateurs UtilisateurFromEmail(String email) {
         Document doc = users.find(Filters.eq("Email", email)).first();
 
@@ -40,7 +60,6 @@ public class UtilisateursFactory {
             );
         } else if ("Médecin".equalsIgnoreCase(role)) {
             String jsonHoraires = doc.getString("horairesConsultation");
-
             Map<String, List<ConsultationService>> horaires = parseHoraires(jsonHoraires);
 
             return new Medecin(
@@ -57,6 +76,15 @@ public class UtilisateursFactory {
         return null;
     }
 
+    /**
+     * @brief Récupère un utilisateur à partir de son nom.
+     *
+     * @param nom Le nom de l'utilisateur recherché.
+     * @return Une instance de {@link Patient} ou {@link Medecin} si trouvée, sinon null.
+     *
+     * @details
+     * Fonctionne de façon similaire à {@link #UtilisateurFromEmail(String)} mais filtre sur le nom.
+     */
     public static Utilisateurs UtilisateurFromNom(String nom) {
         Document doc = users.find(Filters.eq("Nom", nom)).first();
 
@@ -78,7 +106,6 @@ public class UtilisateursFactory {
             );
         } else if ("Médecin".equalsIgnoreCase(role)) {
             String jsonHoraires = doc.getString("horairesConsultation");
-
             Map<String, List<ConsultationService>> horaires = parseHoraires(jsonHoraires);
 
             return new Medecin(
@@ -94,5 +121,4 @@ public class UtilisateursFactory {
         }
         return null;
     }
-
 }
